@@ -23,8 +23,8 @@ services:
       - '172.17.0.1:60188:8080'
     volumes:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
-      - '/var/lib/srv/${USER}/docker/glanceapp/glance/latest/config/glance:/app/config'
-      - '/var/lib/srv/${USER}/docker/glanceapp/glance/latest/data/glance/assets:/app/assets'
+      - '/var/lib/srv/${USER}/docker/glance/rootfs/config/glance:/app/config'
+      - '/var/lib/srv/${USER}/docker/glance/rootfs/data/glance/assets:/app/assets'
     networks:
       - glance
 
