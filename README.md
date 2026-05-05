@@ -46,8 +46,8 @@ See `docker-compose.yaml` for complete list of configurable options.
 
 ## 📂 Volumes
 
-- `./rootfs/data/glance` - Data storage
-- `./rootfs/config/glance` - Data storage
+- `./volumes/data/glance` - Data storage
+- `./volumes/config/glance` - Data storage
 
 ## 🔐 Security
 
