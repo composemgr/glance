@@ -11,14 +11,13 @@ services:
   app:
     image: glanceapp/glance:latest
     container_name: glance-app
-    domainname: ${BASE_DOMAIN_NAME:-}
+    domainname: ${BASE_DOMAIN_NAME:-example.com}
     hostname: ${BASE_HOST_NAME:-$HOSTNAME}
     restart: always
     pull_policy: always
     logging: *default-logging
     environment:
       TZ: ${TZ:-America/New_York}
-      MY_SECRET_TOKEN: ${APP_SECRET_KEY:-changeme_secret_token_min_32_chars}
     ports:
       - '172.17.0.1:60188:8080'
     volumes:
