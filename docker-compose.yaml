@@ -18,6 +18,8 @@ services:
     logging: *default-logging
     environment:
       TZ: ${TZ:-America/New_York}
+      CONTAINER_NAME: glance-app
+      HOSTNAME: ${BASE_HOST_NAME:-$HOSTNAME}
     ports:
       - '172.17.0.1:60188:8080'
     volumes:
@@ -26,8 +28,30 @@ services:
       - '/var/run/docker.sock:/var/run/docker.sock:ro'
     networks:
       - glance
+      - proxy
+      - cloudflare
+    labels:
+      - 'traefik.enable=true'
+      - 'cloudflare.enable=true'
+      - 'traefik.docker.network=proxy'
+      - 'cloudflare.service=http://glance-app:8080'
+      - 'cloudflare.hostname=glance.${CLOUDFLARE_ZONE_NAME:-}'
+      - 'traefik.http.routers.glance-app.entrypoints=http'
+      - 'traefik.http.routers.glance-app-secure.tls=true'
+      - 'traefik.http.routers.glance-app.rule=Host($(${BASE_HOST_NAME:-$HOSTNAME}))'
+      - 'traefik.http.middlewares.glance-app-https-redirect.redirectscheme.scheme=https'
+      - 'traefik.http.routers.glance-app.middlewares=glance-app-https-redirect'
+      - 'traefik.http.routers.glance-app-secure.entrypoints=https'
+      - 'traefik.http.routers.glance-app-secure.rule=Host($(${BASE_HOST_NAME:-$HOSTNAME}))'
+      - 'traefik.http.routers.glance-app-secure.tls.certresolver=cloudflare'
+      - 'traefik.http.routers.glance-app-secure.service=glance-app'
+      - 'traefik.http.services.glance-app.loadbalancer.server.port=8080'
 
 networks:
   glance:
     name: glance
     external: false
+  proxy:
+    external: true
+  cloudflare:
+    external: true
